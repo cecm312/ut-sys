@@ -17,11 +17,17 @@ class View {
         return $html;
     }
 
-    public function print_template($template, $keys) {
+    public function print_template($template, $keys="") {
         $file = $this->views_dir . $template . '.html';
-        $html = file_get_contents($file);
+        $html =file_get_contents($file);
+        if($keys!="" and is_array($keys)){
+            $html=$this->render_data($html,$keys);
+        }
+        return $html;
+    }
+    
+    public function render_data($html,$keys){
         foreach ($keys as $clave => $valor) {
-            # code...
             $html = str_replace('{' . $clave . '}', $valor, $html);
         }
         return $html;

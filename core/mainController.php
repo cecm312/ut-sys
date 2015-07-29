@@ -10,38 +10,15 @@ $appDir=str_replace("\\","",$appDir);
 $appDir=str_replace("/","",$appDir);
 $appDir="/".$appDir."/";
 
-
-
-
-define("MODULE_DIR", $appDir."modules/");
+define("MODULES_DIR", $appDir."modules/");
 define("LIBS_DIR", $appDir."libs/");
 define("UPLOADS_DIR", $appDir."uploads/");
 
-echo MODULE_DIR;
-echo "<br>";
-echo LIBS_DIR;
-echo "<br>";
-echo UPLOADS_DIR;
-echo "<br>";
-
-define("ROOT_DIR", $actual_directory);
-define("SITE_DIR", $actual_directory."/site/");
-define("MODULES_DIR", $actual_directory."/modules/");
-
-echo ROOT_DIR;
-echo "<br>";
-echo SITE_DIR;
-echo "<br>";
-echo MODULES_DIR;
-echo "<br>";
-
-
-
+define("SYSTEM_ROOT_DIR", $actual_directory);
+define("SYSTEM_SITE_DIR", $actual_directory."/site/");
+define("SYSTEM_MODULES_DIR", $actual_directory."/modules/");
 include_once("view.php");
-
-$objView=new View(SITE_DIR);
-
-
+$objView=new View(SYSTEM_SITE_DIR);
 if(isset($_SESSION["iduser"])){
     //aqui se obtiene la informacion del profile
     $user=array(
@@ -61,15 +38,34 @@ if(isset($_SESSION["iduser"])){
 }
 $template="front";
 $page="index";
-
 if(isset($_REQUEST["page"])){
     $template="front";
-    $page=$_REQUEST["page"];
+    $page="index";
+    $keys=array("PAGE"=>$objView->print_template("pages/".$_REQUEST["page"]));
+    $web_page=$objView->print_template($template, $keys);
 }else if(isset($_REQUEST["module"])){
-    $template="back";
+    $module=$_REQUEST["module"];
+    include_once(SYSTEM_MODULES_DIR.$module."/".$_REQUEST["module"]."_controller.php");
+    if(isset($html) and $html!=""){
+        $template="back";
+        $keys=array("CONTAINER"=>$html);
+        $web_page=$objView->print_template($template, $keys);
+    } 
+}else{
+    $template="front";
+    $page="index";
+    $keys=array("PAGE"=>$objView->print_template("pages/index"));
+    $web_page=$objView->print_template($template, $keys);
 }
-$keys=array();
-print $objView->print_template($template, $keys);
+
+if(isset($web_page) and $web_page!=""){
+   $keys=array("MODULES_DIR"=>MODULES_DIR,"LIBS_DIR"=>LIBS_DIR,"UPLOADS_DIR"=>UPLOADS_DIR);
+   print $objView->render_data($web_page, $keys);
+}
+
+
+
+
 
 
 
