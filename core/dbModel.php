@@ -1,5 +1,5 @@
 <?php
-require_once('ConnectionData.php');
+require_once('server.php');
 
 abstract class DBModel {
     private static $db_host = DB_HOST;
