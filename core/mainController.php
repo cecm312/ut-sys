@@ -17,47 +17,61 @@ define("UPLOADS_DIR", $appDir."uploads/");
 define("SYSTEM_ROOT_DIR", $actual_directory);
 define("SYSTEM_SITE_DIR", $actual_directory."/site/");
 define("SYSTEM_MODULES_DIR", $actual_directory."/modules/");
+
 include_once("view.php");
+include_once("dbModel.php");
+
+include_once(SYSTEM_MODULES_DIR."/user/user_model.php");
+
 $objView=new View(SYSTEM_SITE_DIR);
+
 if(isset($_SESSION["iduser"])){
-    //aqui se obtiene la informacion del profile
-    $user=array(
-        "profile"=>1,
-        "user_type"=>1,
-        "name"=>"usuario registrado",
-        "avatar"=>""
-    );
-    $_SESSION["iduser"]=1;
+  $idUser=$_SESSION["iduser"]; 
 }else{
-    $user=array(
-        "profile"=>0,
-        "user_type"=>0,
-        "name"=>"usuario no registrado",
-        "avatar"=>""
-    );
+   $idUser=0;
 }
+$objUser=new User($idUser);
+
 $template="front";
 $page="index";
 if(isset($_REQUEST["page"])){
-    $template="front";
-    $page="index";
     $keys=array("PAGE"=>$objView->print_template("pages/".$_REQUEST["page"]));
-    $web_page=$objView->print_template($template, $keys);
+    $web_page=$objView->print_template("front", $keys);
 }else if(isset($_REQUEST["module"])){
-    $module=$_REQUEST["module"];
-    include_once(SYSTEM_MODULES_DIR.$module."/".$_REQUEST["module"]."_controller.php");
+    $moduleName=$_REQUEST["module"];
+    include_once(SYSTEM_MODULES_DIR."/module/module_model.php");
+    $objModule=new Module($moduleName);
+    switch($objUser->type){
+        case 1:
+            if($objModule->guestAccess){
+                $template="front";
+                $accesModule=true;
+            }else{
+                $accesModule=false;
+                $template="login";
+            }
+            break;
+        case 2:
+            $template="front";
+            $accesModule=true;
+            break;
+        case 3:
+            $template="back";
+            $accesModule=true;
+            break;
+    }
+    if($accesModule){
+        include_once(SYSTEM_MODULES_DIR.$moduleName."/".$moduleName."_controller.php");
+    }
+    $keys=array();
     if(isset($html) and $html!=""){
-        $template="back";
-        $keys=array("CONTAINER"=>$html);
-        $web_page=$objView->print_template($template, $keys);
-    } 
-}else{
-    $template="front";
-    $page="index";
-    $keys=array("PAGE"=>$objView->print_template("pages/index"));
+       $keys["CONTAINER"]=$html;   
+    }  
     $web_page=$objView->print_template($template, $keys);
+}else{
+    $keys=array("PAGE"=>$objView->print_template("pages/index"));
+    $web_page=$objView->print_template("front", $keys);
 }
-
 if(isset($web_page) and $web_page!=""){
    $keys=array("MODULES_DIR"=>MODULES_DIR,"LIBS_DIR"=>LIBS_DIR,"UPLOADS_DIR"=>UPLOADS_DIR);
    print $objView->render_data($web_page, $keys);

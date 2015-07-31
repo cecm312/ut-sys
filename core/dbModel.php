@@ -1,7 +1,9 @@
 <?php
+
 require_once('server.php');
 
 abstract class DBModel {
+
     private static $db_host = DB_HOST;
     private static $db_user = DB_USER;
     private static $db_pass = DB_PASS;
@@ -10,7 +12,7 @@ abstract class DBModel {
     protected $rows = array();
     private $conn;
     public $mensaje = "hecho";
-   
+
     abstract protected function get();
 
     abstract protected function set();
@@ -48,23 +50,35 @@ abstract class DBModel {
 
     //Traer resuktadis de una consulta en un array
     protected function get_result_query() {
+        $this->rows = array();
+        $flag = true;
         $this->open_connection();
         $result = $this->conn->query($this->query);
-        while ($this->rows[] = $result->fetch_assoc());
-        $result->close();
-        $this->close_conection();
-        array_pop($this->rows);
-    }
-    
-    protected function get_all_results_query() {
-        $this->rows=array();
-        $this->open_connection();
-        $result = $this->conn->query($this->query);
-        while ($row = $result->fetch_assoc()) {
-            array_push($this->rows, $row);
+        if (is_bool($result)) {
+            $flag = $result;
+        } else {
+            $this->rows = $result->fetch_assoc();
         }
         $result->close();
         $this->close_conection();
+        return $flag;
+    }
+
+    protected function get_all_results_query() {
+        $this->rows = array();
+        $flag = true;
+        $this->open_connection();
+        $result = $this->conn->query($this->query);
+        if (is_bool($result)) {
+            $flag = $result;
+        } else {
+            while ($row = $result->fetch_assoc()) {
+                array_push($this->rows, $row);
+            }
+        }
+        $result->close();
+        $this->close_conection();
+        return $flag;
     }
 
 }
