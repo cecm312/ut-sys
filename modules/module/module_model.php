@@ -3,7 +3,7 @@
 class Module extends DBModel {
 
     public $name;
-    public $guestAcces;
+    public $guestAccess;
 
     function __construct($name) {
         $this->get($name);
@@ -20,6 +20,7 @@ class Module extends DBModel {
     public function get($name = "") {
         $this->query = "SELECT name,guest_access as guestAccess FROM module WHERE name='$name'";
         $result = $this->get_result_query();
+        
         if ($result) {
             foreach ($this->rows as $row => $value) {
                 $this->$row = $value;

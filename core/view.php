@@ -1,9 +1,7 @@
 <?php
 
 class View {
-
     private $views_dir;
-
     function __construct($views_dir) {
         $this->views_dir = $views_dir;
     }
