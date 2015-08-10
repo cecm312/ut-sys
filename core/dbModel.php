@@ -34,7 +34,7 @@ abstract class DBModel {
     protected function insert_update($keys, $table, $where = "") {
         $rowsUpdated = array();
         foreach ($keys as $row => $value) {
-            array_push($rowsUpdated, "'" . trim($row) . "'=" . "'" . $value . "'");
+            array_push($rowsUpdated, trim($row) . "=" . "'" . $value . "'");
         }
         $values = implode(",", $rowsUpdated);
         if (isset($where) and $where != "") {
@@ -44,6 +44,9 @@ abstract class DBModel {
         }
         $this->open_connection();
         $result = $this->conn->query($this->query);
+        if($result and $where==""){
+            $result=$this->conn->insert_id;
+        }
         $this->close_conection();
         return $result;
     }
@@ -79,6 +82,21 @@ abstract class DBModel {
         $result->close();
         $this->close_conection();
         return $flag;
+    }
+
+    public function saveFile($fileData = array(), $directorio = "") {
+        $result = array();
+        $target_dir = SYSTEM_UPLOADS_DIR . $directorio;
+        $path = $fileData['name'];
+        $ext = pathinfo($path, PATHINFO_EXTENSION);
+        $newFileName=uniqid() . "." . $ext;
+        $target_file = $target_dir . $newFileName;
+        if (move_uploaded_file($fileData["tmp_name"], $target_file)) {
+            $result= array("result" => 1, "file" => $newFileName);
+        } else {
+            $result= array("result" => 0);
+        }
+        return $result;
     }
 
 }

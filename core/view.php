@@ -10,7 +10,7 @@ class View {
         $html = "";
         foreach ($arrayOptions as $option => $value) {
             $sel = ($selected == $option) ? "selected" : "";
-            $html.="<option $sel>$option</option>";
+            $html.="<option value='$option' $sel>$value</option>";
         }
         return $html;
     }
@@ -42,7 +42,7 @@ class View {
         $html = "";
         if(is_array($arrayData) and count($arrayData)>0){
             foreach ($arrayData as $array) {
-            $html.= print_template($template, $array);
+                $html.= $this->print_template($template, $array);
             }
         }else{
             $html="<tr><td colspan='100%'>Sin datos<td></tr>";

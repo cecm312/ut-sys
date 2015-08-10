@@ -19,6 +19,7 @@ define("SYSTEM_ROOT_DIR", $actual_directory);
 define("SYSTEM_SITE_DIR", $actual_directory . "/site/");
 define("SYSTEM_MODULES_DIR", $actual_directory . "/modules/");
 define("SYSTEM_LIBS_DIR", $actual_directory . "/libs/");
+define("SYSTEM_UPLOADS_DIR", $actual_directory . "/uploads/");
 
 include_once("view.php");
 include_once("dbModel.php");
@@ -60,7 +61,18 @@ if (isset($_REQUEST["module"])) {
             break;
         case 2:
             $template = "front";
-            $accesModule = true;
+            if ($objModule->guestAccess == 1) {
+                $template = "front";
+                $accesModule = true;
+            } else {
+                $accesModule = false;
+                $template = "login";
+                $arraytemp=array();
+                foreach ($_GET as $key=>$value){
+                    array_push($arraytemp, "$key=$value");
+                }
+                $_SESSION["redirectLocation"]="$appDir?".implode("&", $arraytemp);
+            }
             break;
         case 3:
             $template = "back";

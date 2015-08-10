@@ -1,10 +1,23 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 29/07/2015, 03:49:53 PM
-    Author     : True Basix
-*/
-
+@media only screen and (max-width : 992px) {
+    .tableProducts .tdImage{
+        width: 50px;
+        margin:auto;
+    }
+    
+    .tableProducts th{
+        height: 75px;
+    }
+    .tableProducts td{
+        height: 75px;
+    }
+    .tableProducts td{
+        text-align: center!important;
+    }
+  }
+  
+  @media only screen and (min-width : 993px) {
+    .tableProducts .tdImage{
+        width: 100px;
+    }
+    
+  }

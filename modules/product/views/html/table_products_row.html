@@ -1,11 +1,11 @@
 <tr>
-    <td><img src="{UPLOADS_DIR}/products/{IMAGEN}" alt="imagen del producto"/></td>
-    <td>Nombre</td>
-    <td>Cantidad</td>
-    <td>Precio</td>
-    <td>Categoria</td>
+    <td class="tdImage"><img src="{imagen}" alt="imagen del producto" class="responsive-img"/></td>
+    <td>{nombre}</td>
+    <td><p>{cantidad}</p></td>
+    <td><p>{precio}<p></td>
+    <td><p>{categoria}<p></td>
     <td>
         <a class="btn-floating waves-effect waves-light btn-small"><i class="mdi-image-edit left"></i></a>
-        <a class="btn-floating waves-effect waves-light btn-small"><i class="mdi-action-delete left"></i></a>
+        <a class="btn-floating waves-effect waves-light btn-small deleteProduct" data-idproduct="{idproducto}"><i class="mdi-action-delete left"></i></a>
     </td>
 </tr>
