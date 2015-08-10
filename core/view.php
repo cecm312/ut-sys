@@ -30,12 +30,24 @@ class View {
         }
         return $html;
     }
+    
+    public function print_table($template,$arrayData){
+        $keys=array(
+            "ROWS"=>$this->print_rows_table($template."_row", $arrayData)
+        );
+        return $this->print_template($template, $keys);        
+    }
 
     public function print_rows_table($template, $arrayData) {
         $html = "";
-        foreach ($arrayData as $array) {
+        if(is_array($arrayData) and count($arrayData)>0){
+            foreach ($arrayData as $array) {
             $html.= print_template($template, $array);
-        } return $html;
+            }
+        }else{
+            $html="<tr><td colspan='100%'>Sin datos<td></tr>";
+        }
+         return $html;
     }
 
 }

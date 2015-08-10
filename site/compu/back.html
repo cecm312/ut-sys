@@ -15,12 +15,45 @@ SITE_IMG_DIR
 
 <html>
     <head>
-        <title>TODO supply a title</title>
+        <title>Administracion</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{LIBS_DIR}materialize/css/materialize.min.css" rel="stylesheet" type="text/css"/>
+        <link href="{SITE_CSS_DIR}back.css" rel="stylesheet" type="text/css"/>
+
+        <script src="{LIBS_DIR}jquery/jquery-2.1.4.js" type="text/javascript"></script>
+        <script src="{LIBS_DIR}materialize/js/materialize.min.js" type="text/javascript"></script>
+        <script src="{SITE_JS_DIR}back.js" type="text/javascript"></script>
     </head>
     <body>
-        <h1>BACK</h1>
-        {CONTAINER}
-    </body>
+        <header>
+            <nav>
+                <ul id="slide-out" class="side-nav fixed">
+                    
+                    
+                    <li><a href="#!">Solicitudes de Contacto</a></li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li>
+                                <a class="collapsible-header">Tienda</a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><a href="?module=product">Productos</a></li>
+                                        <li><a href="?module=categories">Categorias</a></li>
+                                        <li><a href="?module=purchaseOrders">Ordenes de Compra</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <a href="#" data-activates="slide-out" class=" button-collapse"><i class="mdi-navigation-menu"></i></a>
+            </nav>
+        </header>
+        <main>
+            {CONTAINER}
+        </main>    
+        <footer class="page-footer">
+
+        </footer>
 </html>

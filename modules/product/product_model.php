@@ -19,19 +19,22 @@ class Product extends DBModel {
         }else{
             return array();
         }
-        
     }
     
     public function constructWhere($array=""){
-        $arrayFilter=array();;
+        $arrayFilter=array();
         if(isset($array["palabraclave"]) and $array["palabraclave"]!=""){
             array_push($arrayFilter, "nombre like '%".$array["palabraclave"]."%'" );
             array_push($arrayFilter, "descripcion like '%".$array["palabraclave"]."%'" );
         }
         if(isset($array["categoria"]) and $array["categoria"]!=""){
-            array_push($arrayFilter, "categoria='".$array["categoria"]."%'" );
+            array_push($arrayFilter, "categoria like '".$array["categoria"]."'" );
         }
-        return " WHERE ".implode(" and ", $arrayFilter);
+        $where="";
+        if(count($arrayFilter)>0){
+            $where=" WHERE ".implode(" and ", $arrayFilter);
+        }
+        return $where;
     }
 
 
@@ -50,7 +53,7 @@ class Product extends DBModel {
     }
 
 
-    protected function get($idproduct) {
+    protected function get($idproduct="") {
         $this->query="SELECT * FROM products WHERE idproducto";
         $result=$this->get_all_results_query();
         if($result){
@@ -70,7 +73,7 @@ class Product extends DBModel {
                 "imagen"=>$array["categoria"],
                 "categoria"=>$array["categoria"],
             );
-            $this->insert_update($keys, "products","idproducto='");
+            $this->insert_update($keys, "products");
         }
     }
 

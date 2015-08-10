@@ -25,6 +25,7 @@ include_once("dbModel.php");
 include_once(SYSTEM_MODULES_DIR . "profile/profile_model.php");
 
 $sitio = "compu";
+
 $systemObjView = new View(SYSTEM_SITE_DIR . $sitio . "/");
 
 if (isset($_SESSION["idprofile"])) {
@@ -41,7 +42,8 @@ if (isset($_REQUEST["module"])) {
     $moduleName = $_REQUEST["module"];
     include_once(SYSTEM_MODULES_DIR . "/module/module_model.php");
     $objModule = new Module($moduleName);
-    switch ($objProfile->tipo) {
+    $tipo=($objProfile->tipo>3)?3:$objProfile->tipo;
+    switch ($tipo) {
         case 1:
             if ($objModule->guestAccess == 1) {
                 $template = "front";
@@ -71,6 +73,10 @@ if (isset($_REQUEST["module"])) {
 } else if(isset($_REQUEST["login"])){
     $moduleName="web_site";
     $template="login";
+}else if(isset($_REQUEST["logout"])){
+    $moduleName = "web_site";
+    $template = "front";
+    session_destroy();
 }else {
     $moduleName = "web_site";
     $template = "front";
@@ -91,10 +97,11 @@ define("SITE_IMG_DIR", $appDir ."site/$sitio/img/");
 include_once(SYSTEM_MODULE_DIR . "/" . $moduleName . "_controller.php");
 if (isset($html)) {
     if ($template == "back" and isset($_REQUEST["notemplate"])) {
-        print $html;
+        $web_page=$html;
     } else {
         $web_page = $systemObjView->print_template($template,array("CONTAINER"=>$html));
-        $keys = array(
+    }
+    $keys = array(
             "SITE_IMG_DIR"=>SITE_IMG_DIR,
             "SITE_CSS_DIR"=>SITE_IMG_DIR,
             "SITE_JS_DIR"=>SITE_IMG_DIR,
@@ -109,7 +116,6 @@ if (isset($html)) {
             "SITE_IMG_DIR"=>SITE_IMG_DIR,
         );
         print $systemObjView->render_data($web_page, $keys);
-    }
 }
 
 
